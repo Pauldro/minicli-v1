@@ -1,0 +1,6 @@
+$ cat .gitattributes
+*.module linguist-language=PHP
+
+# Auto detect text files and perform LF normalization
+* text eol=lf
+*.php text eol=lf

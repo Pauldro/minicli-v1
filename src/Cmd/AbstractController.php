@@ -1,0 +1,178 @@
+<?php namespace Pauldro\Minicli\Cmd;
+// Minicli
+use Minicli\App as MinicliApp;
+use Minicli\Command\CommandController;
+// Pauldro Minicli
+use Pauldro\Minicli\App\App;
+use Pauldro\Minicli\Output\Printer;
+use Pauldro\Minicli\Services\Logger;
+use Pauldro\Minicli\Util\EnvVarsReader as EnvVars;
+
+/**
+ * Class for Handling Executing Commands
+ * 
+ * @property App         $app
+ * @property CommandCall $input
+ * @property Logger      $log
+ * @property Printer     $printer
+ */
+abstract class AbstractController extends CommandController {
+	const OPTIONS = [];
+	const NOTES = [];
+	const OPTIONS_DEFINITIONS = [];
+	const OPTIONS_DEFINITIONS_OVERRIDE = [];
+	const REQUIRED_PARAMS = [];
+	const SENSITIVE_PARAM_VALUES = [];
+
+	/**
+     * Called before `run`.
+     * @param App $app
+     */
+    public function boot(MinicliApp $app)
+    {
+        parent::boot($app);
+		$this->printer = $app->printer;
+		$this->log     = $app->log;
+    }
+
+/* =============================================================
+	Inits
+============================================================= */
+	/**
+	 * Initialize App
+	 * @return bool
+	 */
+	protected function init() {
+		$this->initEnvTimeZone();
+		
+		if ($this->initRequiredParams() === false) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Initialize the Local Time Zone
+	 * NOTE: used for logging
+	 * @return bool
+	 */
+	protected function initEnvTimeZone() {
+		$sysTZ = exec('date +%Z');
+		$abbr = timezone_name_from_abbr($sysTZ);
+		return date_default_timezone_set($abbr);
+	}
+
+	/**
+	 * Initialize App
+	 * @return bool
+	 */
+	protected function initRequiredParams() {
+		foreach (static::REQUIRED_PARAMS as $param) {
+			if ($this->hasParam($param) === false) {
+				$description = array_key_exists($param, static::OPTIONS_DEFINITIONS) ? static::OPTIONS_DEFINITIONS[$param] : $param;
+				$use         = array_key_exists($param, static::OPTIONS) ? static::OPTIONS[$param] : '';
+				return $this->error("Missing Parameter: $description ($use)");
+			}
+		}
+		return true;
+	}
+
+/* =============================================================
+	Parameter Functions
+============================================================= */
+	/**
+	 * Return boolean value for parameter
+	 * @param  string $param Parameter to get Value from
+	 * @return bool
+	 */
+	protected function getParamBool($param) {
+		return $this->input->getParamBool($param);
+	}
+
+	/**
+	 * Return Parameter Value
+	 * @param  string $param
+	 * @return string
+	 */
+	protected function getParam($param) {
+		return $this->input->getParam($param);
+	}
+
+	/**
+	 * Return Parameter Value as array
+	 * @param  string $param      Parameter Key
+	 * @param  string $delimeter  Delimiter
+	 * @return array
+	 */
+	protected function getParamArray($param, $delimeter = ",") {
+		return $this->input->getParamArray($param, $delimeter);
+	}
+	
+/* =============================================================
+	Logging
+============================================================= */
+	/**
+	 * Setup Logs Directory
+	 * @return bool
+	 */
+	protected function setupLogDir() {
+		if (is_dir($this->app->config->log_dir)) {
+			return true;
+		}
+		return mkdir($this->app->config->log_dir);
+	}
+	
+	/**
+	 * Log Command sent to App
+	 * @return void
+	 */
+	protected function logCommand() {
+		if (EnvVars::exists('LOG.COMMANDS') === false || EnvVars::getBool('LOG.COMMANDS') === false) {
+			return;
+		}
+
+		if ($this->setupLogDir() === false) {
+			return;
+		}
+
+		$cmd  = Logger::sanitizeCmdForLog($this->input, static::SENSITIVE_PARAM_VALUES);
+		$this->log->log('commands', $cmd);
+	}
+
+	/**
+	 * Log Command sent to App
+	 * @return void
+	 */
+	protected function logError($msg) {
+		if ($this->setupLogDir() === false) {
+			return;
+		}
+		$cmd = Logger::sanitizeCmdForLog($this->input, static::SENSITIVE_PARAM_VALUES);
+		$this->log->log('errors', Logger::createLogString([$cmd, $msg]));
+	}
+
+	/**
+	 * Log Error Message
+	 * @param  string $msg
+	 * @return false
+	 */
+	protected function error($msg) {
+		$this->printer->error($msg);
+		$this->logError($msg);
+		return false;
+	}
+
+	/**
+	 * Display Success Message
+	 * @param  string $msg
+	 * @return true
+	 */
+	protected function success($msg) {
+		if ($this->hasFlag('--debug')) {
+			$this->printer->success("Success: $msg");
+			return true;
+		}
+		$this->printer->success($msg);
+		return true;
+	}
+}
