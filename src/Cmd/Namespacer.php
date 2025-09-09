@@ -6,10 +6,10 @@ use ReflectionException;
 /**
  * Ties Controller to a Command
  * 
- * @property string $app_namespace Extra Namespace for App (use for separate script drivers)
+ * @property string $cmd_namespace Extra Namespace for App (use for separate script drivers)
  */
 class Namespacer {
-	protected $app_namespace = '';
+	protected $cmd_namespace = '';
 	protected $name;
 	protected $controllers = [];
 
@@ -23,9 +23,9 @@ class Namespacer {
 	 * @param  string $ns
 	 * @return void
 	 */
-	public function setAppNamespace($ns) : void
+	public function setCmdNamespace($ns) : void
 	{
-		$this->app_namespace = $ns;
+		$this->cmd_namespace = $ns;
 	}
 
 	/**
@@ -84,8 +84,8 @@ class Namespacer {
 		
 		$namespace = 'App\\Cmd';
 
-		if ($this->app_namespace) {
-			$namespace .= "\\$this->app_namespace";
+		if ($this->cmd_namespace) {
+			$namespace .= "\\$this->cmd_namespace";
 		}
 		
 		$full_class_name = sprintf($namespace . '\\%s\\%s', $this->getName(), $controller_class);

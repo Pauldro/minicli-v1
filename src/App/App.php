@@ -5,11 +5,13 @@ use Minicli\Config as MinicliConfig;
 // Pauldro Minicli
 use Pauldro\Minicli\Cmd;
 use Pauldro\Minicli\Output\Printer;
+use Pauldro\Minicli\Services\Env;
 use Pauldro\Minicli\Services\Logger;
 
 /**
  * @property MinicliConfig       $config
  * @property Cmd\CommandRegistry $command_registry
+ * @property Env                 $dotenv
  * @property Logger              $log
  * @property Printer             $printer
  */
@@ -29,10 +31,11 @@ class App extends MinicliApp {
 	{
 		$this->addService('printer', Printer::instance());
 
-		$reg = new Cmd\CommandRegistry($this->config->app_dir);
-		$reg->setAppNamespace($this->config->app_namespace);
+		$reg = new Cmd\CommandRegistry($this->config->cmd_dir);
+		$reg->setCmdNamespace($this->config->app_namespace);
 		$this->addService('command_registry', $reg);
 		$this->addService('log', new Logger());
+		$this->addService('dotenv', new Env());
 	}
 
 	public function parseConfig(array $config = null) : array
