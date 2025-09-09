@@ -143,7 +143,8 @@ abstract class AbstractHelpMenuController extends AbstractController  {
 	 * Display Intro
 	 * @return void
 	 */
-	protected function intro() : void {
+	protected function intro() : void
+	{
 		$printer = $this->printer;
 		$printer->info($this->app->config->app_name);
 		$printer->newline();

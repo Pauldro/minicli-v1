@@ -14,7 +14,8 @@ class Printer extends OutputHandler {
 	 * Return Instance
 	 * @return self
 	 */
-	public static function instance() {
+	public static function instance() : Printer
+	{
 		if (empty(self::$instance)) {
 			self::$instance = new self();
 			self::$instance->registerFilter(new Filter\ColorOutputFilter());
@@ -27,17 +28,19 @@ class Printer extends OutputHandler {
 	 * @param  int   $spaces
 	 * @return string
 	 */
-	public function spaces($spaces = 0) {
+	public function spaces($spaces = 0) : string
+	{
 		return str_pad('', $spaces , ' ');
 	}
 
 	/**
 	 * Displays content using the "default" style
-	 * @param string $content
-	 * @param bool $alt Whether or not to use the inverted style ("alt")
+	 * @param  string $content
+	 * @param  bool $alt Whether or not to use the inverted style ("alt")
 	 * @return void
 	 */
-	public function line($content, $alt = false) {
+	public function line($content, $alt = false) : void
+	{
 		$this->out($content, $alt ? "alt" : "default");
 		$this->newline();
 	}

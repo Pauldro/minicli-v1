@@ -5,12 +5,14 @@
  */
 class EnvVarsReader {
     /** @return bool */
-    public static function exists(string $key) {
+    public static function exists(string $key) : bool
+    {
         return array_key_exists($key, $_ENV);
     }
 
     /** @return string */
-    public static function get(string $key, $default = '') {
+    public static function get(string $key, $default = '') : string
+    {
         if (self::exists($key) === false) {
             return $default;
         }
@@ -18,13 +20,15 @@ class EnvVarsReader {
     }
 
     /** @return bool */
-    public static function getBool(string $key) {
+    public static function getBool(string $key) : bool
+    {
         $value = self::get($key, 'false');
         return $value == 'true';
     }
 
     /** @return array */
-    public static function getArray(string $key, $delimiter = ',') {
+    public static function getArray(string $key, $delimiter = ',') : array
+    {
         return explode($delimiter, self::get($key));
     }
 }

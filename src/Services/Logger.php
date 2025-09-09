@@ -16,7 +16,8 @@ class Logger implements ServiceInterface {
 	 * @param  App $app
 	 * @return void
 	 */
-	public function load(MinicliApp $app) {
+	public function load(MinicliApp $app) : void
+	{
 		$this->dir = rtrim($app->config->logs_dir, '/') . '/';
 	}
 
@@ -28,7 +29,8 @@ class Logger implements ServiceInterface {
 	 * @param  string $filename
 	 * @return string
 	 */
-	public function filepath($filename) {
+	public function filepath($filename) : string
+	{
 		return $this->dir . rtrim($filename, '.log') . '.log';
 	}
 
@@ -38,7 +40,8 @@ class Logger implements ServiceInterface {
 	 * @param  string $text
 	 * @return bool
 	 */
-	public function log($filename, $text) {
+	public function log($filename, $text) : bool
+	{
 		$file = $this->filepath($filename);
 		$content = '';
 
@@ -46,7 +49,7 @@ class Logger implements ServiceInterface {
 			$content = file_get_contents($file);
 		}
 		$line = self::createLogString([date('Ymd'), date('His'), $text]). PHP_EOL;
-		return file_put_contents($file, $content . $line);
+		return boolval(file_put_contents($file, $content . $line));
 	}
 
 	/**
@@ -54,13 +57,14 @@ class Logger implements ServiceInterface {
 	 * @param  string $filename
 	 * @return bool
 	 */
-	public function clear($filename) {
+	public function clear($filename) : bool
+	{
 		$file = $this->filepath($filename);
 		
 		if (file_exists($file) === false) {
 			return true;
 		}
-		return file_put_contents($file, '');
+		return boolval(file_put_contents($file, ''));
 	}
 
 /* =============================================================
@@ -71,7 +75,8 @@ class Logger implements ServiceInterface {
 	 * @param  array $parts
 	 * @return string
 	 */
-	public static function createLogString($parts = []) {
+	public static function createLogString($parts = []) : string
+	{
 		return implode("\t", $parts);
 	}
 

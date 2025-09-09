@@ -212,7 +212,8 @@ class Data implements \IteratorAggregate, \ArrayAccess {
 	 * Enables the object data properties to be iterable as an array
 	 * @return ArrayObject
 	 */
-	public function getIterator() : ArrayObject {
+	public function getIterator() : ArrayObject
+	{
 		return new ArrayObject($this->data);
 	}
 

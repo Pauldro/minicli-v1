@@ -213,7 +213,8 @@ class SimpleArray implements \IteratorAggregate, \ArrayAccess, \Countable {
 	 * @param int|string $key Key of item to set.
 	 * @param mixed $value Value of item.
 	 */
-	public function offsetSet($key, $value) : void {
+	public function offsetSet($key, $value) : void
+	{
         $this->set($key, $value);
     }
 
@@ -222,7 +223,8 @@ class SimpleArray implements \IteratorAggregate, \ArrayAccess, \Countable {
 	 * @param int|string $key Key of item to retrieve.
 	 * @return mixed
 	 */
-	public function offsetGet($key) : mixed {
+	public function offsetGet($key) : mixed
+	{
 		if($this->offsetExists($key)) {
 			return $this->data[$key];
 		}
@@ -255,5 +257,4 @@ class SimpleArray implements \IteratorAggregate, \ArrayAccess, \Countable {
 	{
 		return array_key_exists($key, $this->data);
 	}
-
 }

@@ -14,11 +14,13 @@ class CommandRegistry extends MinicliCommandRegistry {
 	 * @param  string $ns
 	 * @return void
 	 */
-	public function setAppNamespace($ns) {
+	public function setAppNamespace($ns) : void
+	{
 		$this->app_namespace = $ns;
 	}
 
-	public function registerNamespace($command_namespace) {
+	public function registerNamespace($command_namespace) : void
+	{
 		$namespace = new Namespacer($command_namespace);
 		$namespace->setAppNamespace($this->app_namespace);
 		$namespace->loadControllers($this->getCommandsPath());

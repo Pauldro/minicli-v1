@@ -25,7 +25,8 @@ class App extends MinicliApp {
 	 * Add Services (printer, command_registry)
 	 * @return void
 	 */
-	protected function addServices() {
+	protected function addServices() : void
+	{
 		$this->addService('printer', Printer::instance());
 
 		$reg = new Cmd\CommandRegistry($this->config->app_dir);
@@ -34,13 +35,15 @@ class App extends MinicliApp {
 		$this->addService('log', new Logger());
 	}
 
-	public function parseConfig(array $config = null) {
+	public function parseConfig(array $config = null) : array
+	{
 		return array_merge([
 			'app_path' => __DIR__ . '/../app/Cmd',
 		], $config);
 	}
 
-	public function runCommand(array $argv = []) {
+	public function runCommand(array $argv = []) : void
+	{
 		$input = new Cmd\CommandCall($argv);
 
 		if (count($input->args) < 2) {

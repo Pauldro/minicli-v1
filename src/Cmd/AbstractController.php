@@ -28,7 +28,7 @@ abstract class AbstractController extends CommandController {
      * Called before `run`.
      * @param App $app
      */
-    public function boot(MinicliApp $app)
+    public function boot(MinicliApp $app) : void
     {
         parent::boot($app);
 		$this->printer = $app->printer;
@@ -42,7 +42,8 @@ abstract class AbstractController extends CommandController {
 	 * Initialize App
 	 * @return bool
 	 */
-	protected function init() {
+	protected function init() : bool
+	{
 		$this->initEnvTimeZone();
 		
 		if ($this->initRequiredParams() === false) {
@@ -56,7 +57,8 @@ abstract class AbstractController extends CommandController {
 	 * NOTE: used for logging
 	 * @return bool
 	 */
-	protected function initEnvTimeZone() {
+	protected function initEnvTimeZone() : bool
+	{
 		$sysTZ = exec('date +%Z');
 		$abbr = timezone_name_from_abbr($sysTZ);
 		return date_default_timezone_set($abbr);
@@ -66,7 +68,8 @@ abstract class AbstractController extends CommandController {
 	 * Initialize App
 	 * @return bool
 	 */
-	protected function initRequiredParams() {
+	protected function initRequiredParams() : bool
+	{
 		foreach (static::REQUIRED_PARAMS as $param) {
 			if ($this->hasParam($param) === false) {
 				$description = array_key_exists($param, static::OPTIONS_DEFINITIONS) ? static::OPTIONS_DEFINITIONS[$param] : $param;
@@ -85,16 +88,18 @@ abstract class AbstractController extends CommandController {
 	 * @param  string $param Parameter to get Value from
 	 * @return bool
 	 */
-	protected function getParamBool($param) {
+	protected function getParamBool($param) : bool
+	{
 		return $this->input->getParamBool($param);
 	}
 
 	/**
 	 * Return Parameter Value
 	 * @param  string $param
-	 * @return string
+	 * @return string|null
 	 */
-	protected function getParam($param) {
+	protected function getParam($param) : mixed
+	{
 		return $this->input->getParam($param);
 	}
 
@@ -104,7 +109,8 @@ abstract class AbstractController extends CommandController {
 	 * @param  string $delimeter  Delimiter
 	 * @return array
 	 */
-	protected function getParamArray($param, $delimeter = ",") {
+	protected function getParamArray($param, $delimeter = ",") : array
+	{
 		return $this->input->getParamArray($param, $delimeter);
 	}
 	
@@ -115,7 +121,8 @@ abstract class AbstractController extends CommandController {
 	 * Setup Logs Directory
 	 * @return bool
 	 */
-	protected function setupLogDir() {
+	protected function setupLogDir() : bool
+	{
 		if (is_dir($this->app->config->log_dir)) {
 			return true;
 		}
@@ -126,7 +133,8 @@ abstract class AbstractController extends CommandController {
 	 * Log Command sent to App
 	 * @return void
 	 */
-	protected function logCommand() {
+	protected function logCommand() : void
+	{
 		if (EnvVars::exists('LOG.COMMANDS') === false || EnvVars::getBool('LOG.COMMANDS') === false) {
 			return;
 		}
@@ -143,7 +151,8 @@ abstract class AbstractController extends CommandController {
 	 * Log Command sent to App
 	 * @return void
 	 */
-	protected function logError($msg) {
+	protected function logError($msg) : void
+	{
 		if ($this->setupLogDir() === false) {
 			return;
 		}
@@ -156,7 +165,8 @@ abstract class AbstractController extends CommandController {
 	 * @param  string $msg
 	 * @return false
 	 */
-	protected function error($msg) {
+	protected function error($msg) : bool
+	{
 		$this->printer->error($msg);
 		$this->logError($msg);
 		return false;
@@ -167,7 +177,8 @@ abstract class AbstractController extends CommandController {
 	 * @param  string $msg
 	 * @return true
 	 */
-	protected function success($msg) {
+	protected function success($msg) : bool
+	{
 		if ($this->hasFlag('--debug')) {
 			$this->printer->success("Success: $msg");
 			return true;

@@ -26,7 +26,8 @@ class DataArray extends SimpleArray {
 	 * NOTE: use if listing Data Classes
 	 * @return array[array]
 	 */
-	public function getJsonArray() {
+	public function getJsonArray() : array
+	{
 		$data = [];
 		foreach ($this->data as $item) {
 			$data[] = $item->getJsonArray();

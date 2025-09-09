@@ -12,7 +12,8 @@ class FileWriter {
     public  $errorMsg;
 	public  $lastWrittenFile;
 
-	public static function instance() : FileWriter {
+	public static function instance() : FileWriter
+	{
 		if (empty(self::$instance)) {
 			self::$instance = new static();
 		}

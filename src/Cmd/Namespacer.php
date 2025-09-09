@@ -23,7 +23,8 @@ class Namespacer {
 	 * @param  string $ns
 	 * @return void
 	 */
-	public function setAppNamespace($ns) {
+	public function setAppNamespace($ns) : void
+	{
 		$this->app_namespace = $ns;
 	}
 
@@ -31,7 +32,8 @@ class Namespacer {
 	 * Return Name
 	 * @return string
 	 */
-	public function getName() {
+	public function getName() : string
+	{
 		return $this->name;
 	}
 
@@ -40,7 +42,8 @@ class Namespacer {
 	 * @param  string $commands_path
 	 * @return array
 	 */
-	public function loadControllers($commands_path) {
+	public function loadControllers($commands_path) : array
+	{
 		foreach (glob($commands_path . '/' . $this->getName() . '/*Controller.php') as $controller_file) {
 			$this->loadCommandMap($controller_file);
 		}
@@ -52,16 +55,18 @@ class Namespacer {
 	 * Return Controllers
 	 * @return array
 	 */
-	public function getControllers() {
+	public function getControllers() : array
+	{
 		return $this->controllers;
 	}
 
 	/**
 	 * Return Controller Class for Command
 	 * @param  string $command_name
-	 * @return string
+	 * @return AbstractController|null
 	 */
-	public function getController($command_name) {
+	public function getController($command_name) : AbstractController
+	{
 		return isset($this->controllers[$command_name]) ? $this->controllers[$command_name] : null;
 	}
 
@@ -70,7 +75,8 @@ class Namespacer {
 	 * @param  string $controller_file
 	 * @return void
 	 */
-	protected function loadCommandMap($controller_file) {
+	protected function loadCommandMap($controller_file) : void
+	{
 		$filename = basename($controller_file);
 
 		$controller_class = str_replace('.php', '', $filename);
