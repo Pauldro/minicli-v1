@@ -17,9 +17,11 @@
 		}
 	},
 	"require": {
-		"minicli/minicli": "v2.0.x-dev"
+		"minicli/minicli": "v2.0.x-dev",
+		"vlucas/phpdotenv": "5.4.x-dev"
 	},
 	"require-dev": {
-		"minicli/minicli": "v2.0.x-dev"
+		"minicli/minicli": "v2.0.x-dev",
+		"vlucas/phpdotenv": "5.4.x-dev"
 	}
 }
