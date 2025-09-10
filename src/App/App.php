@@ -21,8 +21,12 @@ class App extends MinicliApp {
 		parent::__construct($this->parseConfig($config));
 
 		$this->addServices();
+		$this->parseSetInis();
 	}
 
+/* =============================================================
+    Inits, Boots, Loads
+============================================================= */
 	/**
 	 * Add Services (printer, command_registry)
 	 * @return void
@@ -38,6 +42,32 @@ class App extends MinicliApp {
 		$this->addService('dotenv', new Env());
 	}
 
+	/**
+     * Parse, Set Inis
+     * @return void
+     */
+    private function parseSetInis() : void
+    {
+        if ($this->config->has('php_ini') === false) {
+            return;
+        }
+		/** @var array */
+        $conf = $this->config->php_ini;
+        $dir = rtrim($conf['dir'], '/') . '/';
+        $files = array_key_exists('files', $conf) ? $conf['files'] : [];
+
+        foreach ($files as $file) {
+            $settings = parse_ini_file($dir.$file);
+
+            foreach ($settings as $option => $value) {
+                ini_set($option, $value);
+            }
+        }
+    }
+
+/* =============================================================
+    Public
+============================================================= */
 	public function parseConfig(array $config = null) : array
 	{
 		return array_merge([
