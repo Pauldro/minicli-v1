@@ -26,7 +26,7 @@ class SessionVars {
 	 * @param  string $_key Name of session variable to get if first argument is namespace, omit otherwise.
 	 * @return mixed        Returns value of seession variable, or NULL if not found.
      */
-    public static function get($key, $_key = null) : mixed
+    public static function get($key, $_key = null)
     {
         if ($_key !== null) { // namespaced
 			return self::getFor($key, $_key);
@@ -81,7 +81,7 @@ class SessionVars {
 	 * @param string $key  Specify variable name to retrieve, or blank string to return all variables in the namespace.
 	 * @return mixed
 	 */
-	public static function getFor($ns, $key) : mixed
+	public static function getFor($ns, $key)
     {
 		$data = self::get($ns);
 
@@ -99,7 +99,7 @@ class SessionVars {
 	 * @param  string
 	 * @return array
 	 */
-	public static function getAllFor($ns) : mixed
+	public static function getAllFor($ns) : array
     {
 		return self::getFor($ns, '');
 	}

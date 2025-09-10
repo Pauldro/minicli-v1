@@ -49,7 +49,7 @@ class Data implements \IteratorAggregate, \ArrayAccess {
 	 * @return mixed|null          Returns value of requested property, or null if the property was not found.
 	 *
 	 */
-	public function get($key) : mixed
+	public function get($key)
 	{
 		$method = 'get' . ucfirst($key);
 
@@ -74,7 +74,7 @@ class Data implements \IteratorAggregate, \ArrayAccess {
 	 * @param  string $key
 	 * @return mixed|null
 	 */
-	public function __get($key) : mixed
+	public function __get($key)
 	{
 		return $this->get($key);
 	}
@@ -118,24 +118,24 @@ class Data implements \IteratorAggregate, \ArrayAccess {
 	 *
 	 * @param  string $key Name of property you want to set
 	 * @param  mixed $value Value of property
-	 * @return $this
+	 * @return void
 	 */
-	public function set($key, $value) : static
+	public function set($key, $value) : void
 	{
 		if ($key === 'data') {
 			if (is_array($value) === false) {
 				$value = (array) $value;
 			}
-			return $this->setArray($value);
+			$this->setArray($value);
+			return;
 		}
 
 		if (property_exists($this, $key)) {
 			$this->$key = $value;
-			return $this;
+			return;
 		}
 
 		$this->data[$key] = $value;
-		return $this;
 	}
 
 	/**
@@ -143,12 +143,11 @@ class Data implements \IteratorAggregate, \ArrayAccess {
 	 * @param  array $data Associative array of where the keys are property names, and values are… values.
 	 * @return $this
 	 */
-	public function setArray(array $data) : static 
+	public function setArray(array $data) : void 
 	{
 		foreach ($data as $key => $value) {
 			$this->__set($key, $value);
 		}
-		return $this;
 	}
 
 	/**
@@ -197,12 +196,10 @@ class Data implements \IteratorAggregate, \ArrayAccess {
 	 * $item->remove('some_property');
 	 * ~~~~~
 	 * @param string $key Name of property you want to remove
-	 * @return $this
 	 */
-	public function remove($key) : static
+	public function remove($key) : void
 	{
 		unset($this->data[$key]);
-		return $this;
 	}
 
 /* =============================================================

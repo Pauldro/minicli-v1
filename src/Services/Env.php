@@ -17,9 +17,9 @@ use Pauldro\Minicli\Exceptions\MissingEnvVarsException;
  */
 class Env implements ServiceInterface {
     const REQUIRED = [];
-    protected string $dir;
-    protected string $filepath;
-    protected Dotenv $env;
+    protected $dir;
+    protected $filepath;
+    protected $env;
 
     /**
      * load
@@ -82,10 +82,10 @@ class Env implements ServiceInterface {
      * @param  string $var
      * @return string|null
      */
-    public function get(string $var) : string|null
+    public function get(string $var) : string
     {
         if ($this->exists($var) === false) {
-            return null;
+            return '';
         }
         return $_ENV[$var];
     }
