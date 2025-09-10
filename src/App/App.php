@@ -57,6 +57,9 @@ class App extends MinicliApp {
         $files = array_key_exists('files', $conf) ? $conf['files'] : [];
 
         foreach ($files as $file) {
+			if (file_exists($dir.$file) === false) {
+				continue;
+			}
             $settings = parse_ini_file($dir.$file);
 
             foreach ($settings as $option => $value) {
