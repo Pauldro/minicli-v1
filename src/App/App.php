@@ -1,5 +1,6 @@
 <?php namespace Pauldro\Minicli\App;
 // Minicli Library
+use Exception;
 use Minicli\App as MinicliApp;
 use Minicli\Config as MinicliConfig;
 // Pauldro Minicli
@@ -40,6 +41,18 @@ class App extends MinicliApp {
 		$this->addService('command_registry', $reg);
 		$this->addService('log', new Logger());
 		$this->addService('dotenv', new Env());
+
+		if ($this->config->has('services')) {
+			if (is_array($this->config->services) === false) {
+				return;
+			}
+			foreach ($this->config->services as $name => $class) {
+				if (class_exists($class) === false) {
+					throw new Exception("Class not found: $class");
+				}
+				$this->addService($name, new $class());
+			}
+		}
 	}
 
 	/**
