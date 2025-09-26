@@ -36,7 +36,7 @@ class App extends MinicliApp {
 		$this->addService('printer', Printer::instance());
 
 		$reg = new Cmd\CommandRegistry($this->config->cmd_dir);
-		$reg->setCmdNamespace($this->config->app_namespace);
+		$reg->setCmdNamespace($this->config->cmd_namespace);
 		$this->addService('command_registry', $reg);
 		$this->addService('log', new Logger());
 		$this->addService('dotenv', new Env());
