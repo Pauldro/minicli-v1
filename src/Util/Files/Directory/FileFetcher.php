@@ -5,15 +5,15 @@ use Exception;
 use Pauldro\Minicli\Util\Files\FileFetcher as Fetcher;
 
 /**
- * FileFetcher
- *
  * Wrapper for fetching files from a single directory
  * @property Fetcher $fetcher
+ * @property string  $dir
+ * @property string  $errorMsg
  */
 class FileFetcher {
-    protected string $dir;
+    protected $dir;
     protected $fetcher;
-    public string $errorMsg;
+    public $errorMsg;
 
     public function __construct(string $dir) {
         if (is_dir($dir) === false) {
@@ -48,7 +48,7 @@ class FileFetcher {
      * @param  string $filename
      * @return array|bool|string
      */
-    public function fetch(string $filename) : array|bool|string
+    public function fetch(string $filename)
     {
         $data = $this->fetcher->fetch($this->filepath($filename));
 

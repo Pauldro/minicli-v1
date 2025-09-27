@@ -12,7 +12,7 @@ class JsonFetcher extends FileFetcher {
      * @param  string $filepath
      * @return array
      */
-    public function fetch(string $filepath) : mixed
+    public function fetch(string $filepath)
     {
        if ($this->exists($filepath) === false) {
 			$this->errorMsg = 'File not found: ' . $filepath;

@@ -98,7 +98,7 @@ abstract class AbstractController extends CommandController {
 	 * @param  string $param
 	 * @return string|null
 	 */
-	protected function getParam($param) : mixed
+	protected function getParam($param)
 	{
 		return $this->input->getParam($param);
 	}

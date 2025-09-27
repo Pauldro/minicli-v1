@@ -7,11 +7,11 @@ use Pauldro\Minicli\Util\Files\JsonFetcher as Fetcher;
  * Wrapper for fetching JSON files from a single directory
  * 
  * @property Fetcher $fetcher
+ * @property string  $dir
+ * @property string  $errorMsg
  */
 class JsonFetcher extends FileFetcher {
-    protected string $dir;
     protected $fetcher;
-    public string $errorMsg;
 
 	public function __construct(string $dir) {
 		parent::__construct($dir);

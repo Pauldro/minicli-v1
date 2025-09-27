@@ -9,8 +9,8 @@
  */
 class FileWriter {
     private static $instance;
-    public  $errorMsg;
-	public  $lastWrittenFile;
+    public $errorMsg;
+	public $lastWrittenFile;
 
 	public static function instance() : FileWriter
 	{

@@ -2,15 +2,16 @@
 
 
 /**
- * FileFetcher
  * Utility for fetching file contents
+ * 
+ * @property string $errorMsg
  */
 class FileFetcher {
     protected static $instance;
-    public string $errorMsg;
+    public $errorMsg;
 
 
-	public static function instance() : static
+	public static function instance()
     {
 		if (empty(static::$instance)) {
 			static::$instance = new static();
@@ -33,7 +34,7 @@ class FileFetcher {
      * @param  string $filepath
      * @return bool|string
      */
-    public function fetchContents(string $filepath) : bool|string
+    public function fetchContents(string $filepath) 
     {
         return file_get_contents($filepath);
     }
@@ -43,7 +44,7 @@ class FileFetcher {
      * @param  string $filepath
      * @return mixed
      */
-    public function fetch(string $filepath) : mixed
+    public function fetch(string $filepath)
     {
         if ($this->exists($filepath) === false) {
             $this->errorMsg = "File not found: $filepath";
@@ -66,7 +67,7 @@ class FileFetcher {
 	 * @param  string $filepath
 	 * @return int
 	 */
-	public function modified($filepath) : bool|int
+	public function modified($filepath)
     {
 		if ($this->exists($filepath) === false) {
 			return 0;

@@ -19,7 +19,7 @@ class SimpleArray implements \IteratorAggregate, \ArrayAccess, \Countable {
 	 * @param  int|string $key  Provide any of the following:
 	 * @return mixed
 	 */
-	public function get($key) : mixed
+	public function get($key)
 	{
 		if ($this->has($key) === false) {
 			return null;
@@ -71,7 +71,7 @@ class SimpleArray implements \IteratorAggregate, \ArrayAccess, \Countable {
 	 * Note that this resets the internal SimpleArray pointer, which would affect other active iterations.
 	 * @return mixed
 	 */
-	public function first() : mixed 
+	public function first()
 	{
 		return reset($this->data);
 	}
@@ -80,7 +80,7 @@ class SimpleArray implements \IteratorAggregate, \ArrayAccess, \Countable {
 	 * Returns the last item in the SimpleArray or boolean false if empty.
 	 * Note that this resets the internal SimpleArray pointer, which would affect other active iterations.
 	 */
-	public function last() : mixed
+	public function last()
 	{
 		return end($this->data);
 	}
@@ -223,7 +223,7 @@ class SimpleArray implements \IteratorAggregate, \ArrayAccess, \Countable {
 	 * @param int|string $key Key of item to retrieve.
 	 * @return mixed
 	 */
-	public function offsetGet($key) : mixed
+	public function offsetGet($key)
 	{
 		if($this->offsetExists($key)) {
 			return $this->data[$key];

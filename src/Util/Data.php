@@ -84,7 +84,7 @@ class Data implements \IteratorAggregate, \ArrayAccess {
 	 * @param string $key
 	 * @return mixed
 	 */
-	public function __invoke($key) : mixed
+	public function __invoke($key)
 	{
 		return $this->get($key);
 	}
@@ -231,7 +231,7 @@ class Data implements \IteratorAggregate, \ArrayAccess {
 	 * @param  int|string               $key  Key of item to retrieve.
 	 * @return int|string|array|object        Value of item requested, or false if it doesn't exist.
 	 */
-	public function offsetGet($key) : mixed
+	public function offsetGet($key)
 	{
 		$value = $this->get($key);
 		return is_null($value) ? false : $value;
