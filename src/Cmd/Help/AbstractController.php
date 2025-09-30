@@ -223,7 +223,7 @@ abstract class AbstractController extends ParentController {
 		return static::OPTIONS_DEFINITIONS[$opt];
 	}
 
-	protected function getSubcommandController(string $command, string $subcommand) : ParentController|false 
+	protected function getSubcommandController(string $command, string $subcommand) 
 	{
 		$reflector = new ReflectionClass(get_class($this));
 		$ns = $reflector->getNamespaceName() . '\\' . ucfirst($command) . '\\';
