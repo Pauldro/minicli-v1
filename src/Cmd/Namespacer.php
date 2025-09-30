@@ -65,7 +65,7 @@ class Namespacer {
 	 * @param  string $command_name
 	 * @return AbstractController|null
 	 */
-	public function getController($command_name) : AbstractController
+	public function getController($command_name)
 	{
 		return isset($this->controllers[$command_name]) ? $this->controllers[$command_name] : null;
 	}
