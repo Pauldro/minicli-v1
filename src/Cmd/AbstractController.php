@@ -35,6 +35,21 @@ abstract class AbstractController extends CommandController {
 		$this->log     = $app->log;
     }
 
+	/**
+	 * Setup controller
+	 * @param  App $app
+	 * @param  CommandCall $input
+	 * @return void
+	 */
+	public function bootstrap(MinicliApp $app, CommandCall $input) : void
+	{
+		$this->app     = $app;
+        $this->config  = $app->config;
+        $this->log     = $app->log;
+		$this->printer = $app->printer;
+		$this->input   = $input;
+	}
+
 /* =============================================================
 	Inits
 ============================================================= */
