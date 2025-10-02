@@ -25,7 +25,8 @@ class JsonFetcher extends FileFetcher {
 	 */
 	public function filepath(string $filename) : string
     {
-        $filename = rtrim($filename, '.json') . '.json';
+        $filename = preg_replace('/\.\w+$/', '', $filename);
+		$filename .= '.json';
 		return parent::filepath($filename);
 	}
 }
