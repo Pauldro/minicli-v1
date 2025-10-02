@@ -121,7 +121,7 @@ class SimpleArray implements \IteratorAggregate, \ArrayAccess, \Countable {
 	 * @param  mixed      $value Item value to set.
 	 * @return $this
 	 */
-	public function set($key, $value) : static 
+	public function set($key, $value) : SimpleArray
 	{
 		$this->data[$key] = $value;
 		return $this;
@@ -135,7 +135,7 @@ class SimpleArray implements \IteratorAggregate, \ArrayAccess, \Countable {
 	 * @param  mixed $item Item to add.
 	 * @return $this
 	 */
-	public function add($item) : static
+	public function add($item) : SimpleArray
 	{
 		$this->data[] = $item;
 		return $this;
@@ -149,7 +149,7 @@ class SimpleArray implements \IteratorAggregate, \ArrayAccess, \Countable {
 	 * @param  array Set Array
 	 * @return $this
 	 */
-	public function setArray($items = []) : static
+	public function setArray($items = []) : SimpleArray
 	{
 		$this->data = $items;
 		return $this;
@@ -163,7 +163,7 @@ class SimpleArray implements \IteratorAggregate, \ArrayAccess, \Countable {
 	 * @param int|string $key Item to remove (object), or index of that item.
 	 * @return $this
 	 */
-	public function remove($key) : static
+	public function remove($key) : SimpleArray
 	{
 		if(array_key_exists($key, $this->data)) {
 			unset($this->data[$key]);
