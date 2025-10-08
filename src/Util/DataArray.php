@@ -35,6 +35,15 @@ class DataArray extends SimpleArray {
 		return $data;
 	}
 
+	public function getArray() : array
+	{
+		$data = [];
+		foreach ($this->data as $item) {
+			$data[] = $item->getArray();
+		}
+		return $data;
+	}
+
 	/**
 	 * Return new/blank item of the type that this DataArray holds
 	 * @return Data
