@@ -312,6 +312,11 @@ class Data implements \IteratorAggregate, \ArrayAccess {
 		return $this->trackChanges; 
 	}
 
+	public function isTrackingChanges() : bool
+	{
+		return $this->trackChanges; 
+	}
+
 	public function setTrackChanges(bool $track) : void
 	{
 		$this->trackChanges = $track;
@@ -338,6 +343,25 @@ class Data implements \IteratorAggregate, \ArrayAccess {
 	public function getChanges() : array
 	{
 		return $this->changes;
+	}
+
+	/**
+	 * Return current values of changed fields
+	 * @return array<mixed|null>
+	 */
+	public function getCurrentChanges() : array
+	{
+		$keys = array_keys($this->changes);
+
+		if (empty($keys)) {
+			return [];
+		}
+		$list = [];
+
+		foreach ($keys as $key) {
+			$list[$key] = $this->get($key);
+		}
+		return $list;
 	}
 
 	public function trackChange($fieldname, $old = null, $new = null) : void
