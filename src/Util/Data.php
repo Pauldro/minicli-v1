@@ -108,10 +108,20 @@ class Data implements \IteratorAggregate, \ArrayAccess {
 		return $this->__isset($key);
 	}
 
+	/**
+	 * Ensures that isset() and empty() work for this classes properties.
+	 * @param string $key
+	 * @return bool
+	 */
+	public function __isset($key) : bool 
+	{
+		return isset($this->data[$key]);
+	}
+
 	protected function isEqual($key, $value1, $value2) : bool
 	{
-		if($key) {} // intentional to avoid unused argument notice
-		// $key intentionally not used here, but may be used by descending classes
+		if($key) {} // avoid unused argument notice
+		// $key not used here, but may be used by child classes
 		return $value1 === $value2; 	
 	}
 
@@ -153,7 +163,7 @@ class Data implements \IteratorAggregate, \ArrayAccess {
 		if ($this->trackChanges) {
 			$oldValue = array_key_exists($key, $this->data) ? $key : null;
 			if ($this->isEqual($key, $oldValue, $value)) {
-				$this->trackChange($key, $v, $value);
+				$this->trackChange($key, $oldValue, $value);
 			}
 		}
 		$this->data[$key] = $value;
@@ -165,7 +175,8 @@ class Data implements \IteratorAggregate, \ArrayAccess {
 	 * @param  mixed $value
 	 * @return void
 	 */
-	public function setWithoutTracking($key, $value) {
+	public function setWithoutTracking($key, $value) : void
+	{
 		$isTracking = $this->getTrackChanges();
 		if ($isTracking) {
 			$this->setTrackChanges(false);
@@ -205,16 +216,6 @@ class Data implements \IteratorAggregate, \ArrayAccess {
 		}
 		$this->set($key, $value);
 		return;
-	}
-
-	/**
-	 * Ensures that isset() and empty() work for this classes properties.
-	 * @param string $key
-	 * @return bool
-	 */
-	public function __isset($key) : bool 
-	{
-		return isset($this->data[$key]);
 	}
 
 /* =============================================================
