@@ -7,6 +7,7 @@ use Pauldro\Minicli\App\App;
 use Pauldro\Minicli\Output\Printer;
 use Pauldro\Minicli\Services\Logger;
 use Pauldro\Minicli\Util\EnvVarsReader as EnvVars;
+use Pauldro\Minicli\Util\StringUtilities as Strings;
 
 /**
  * Class for Handling Executing Commands
@@ -200,5 +201,28 @@ abstract class AbstractController extends CommandController {
 		}
 		$this->printer->success($msg);
 		return true;
+	}
+
+/* =============================================================
+	Displays
+============================================================= */
+	/**
+	 * Display Key Value Data
+	 * @param  array $data
+	 * @return void
+	 */
+	protected function displayDictionary(array $data) : void
+	{
+		$printer = $this->printer;
+		$titleLength = Strings::longestStrlen(array_keys($data));
+		
+		foreach ($data as $title => $value) {
+            $lineData = [
+                $printer->spaces(4),
+                $printer->filterOutput(Strings::pad($title, $titleLength + 2), 'success'),
+                $value
+            ];
+            $printer->line(implode('', $lineData));
+		}
 	}
 }
