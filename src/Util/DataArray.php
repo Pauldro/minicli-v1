@@ -61,4 +61,22 @@ class DataArray extends SimpleArray {
 	{
 		return $this->newItem();
 	}
+
+	/**
+	 * Return all the values for a fieldname
+	 * @param  string $name
+	 * @return array
+	 */
+	public function fieldValues(string $name) : array
+	{
+		$values = [];
+
+		foreach ($this as $item) {
+			if ($item->has($name) === false) {
+				continue;
+			}
+			$values[] = $name;
+		}
+		return $values;
+	}
 }
