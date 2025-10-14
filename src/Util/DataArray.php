@@ -75,7 +75,7 @@ class DataArray extends SimpleArray {
 			if ($item->has($name) === false) {
 				continue;
 			}
-			$values[] = $name;
+			$values[] = $item->get($name);
 		}
 		return $values;
 	}
