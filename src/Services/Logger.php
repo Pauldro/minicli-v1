@@ -18,7 +18,7 @@ class Logger implements ServiceInterface {
 	 */
 	public function load(MinicliApp $app) : void
 	{
-		$this->dir = rtrim($app->config->logs_dir, '/') . '/';
+		$this->dir = rtrim($app->config->log_dir, '/') . '/';
 	}
 
 /* =============================================================
