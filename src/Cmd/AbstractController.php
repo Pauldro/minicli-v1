@@ -18,6 +18,7 @@ use Pauldro\Minicli\Util\StringUtilities as Strings;
  * @property Printer     $printer
  */
 abstract class AbstractController extends CommandController {
+	const DESCRIPTION = '';
 	const OPTIONS = [];
 	const NOTES = [];
 	const OPTIONS_DEFINITIONS = [];
