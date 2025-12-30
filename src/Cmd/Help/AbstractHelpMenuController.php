@@ -8,6 +8,7 @@ use Pauldro\Minicli\Util\StringUtilities as Strings;
  * Handles Displaying the Help Menu
  */
 abstract class AbstractHelpMenuController extends AbstractController  {
+	const IS_NAMESPACED_BY_SCRIPTNAME = false;
 	const COMMAND_DEFINITIONS = [
 		// '{{cmd}}' => '{{description}}',
 	];
@@ -33,6 +34,15 @@ abstract class AbstractHelpMenuController extends AbstractController  {
 	protected function initCommandMap() : bool
     {
 		$this->commandMap = $this->app->command_registry->getCommandMap();
+		
+		if (static::IS_NAMESPACED_BY_SCRIPTNAME === false) {
+			return true;
+		}
+
+		$cmdmap = [
+			$this->input->command => $this->commandMap[$this->input->command],
+		];
+		$this->commandMap = $cmdmap;
 		return true;
 	}
 
