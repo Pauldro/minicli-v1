@@ -9,6 +9,7 @@ use Pauldro\Minicli\Util\StringUtilities as Strings;
  */
 abstract class AbstractHelpMenuController extends AbstractController  {
 	const IS_NAMESPACED_BY_SCRIPTNAME = false;
+	const USE_DIR_NAMESACE_FOR_HELP_MENU = false;
 	const COMMAND_DEFINITIONS = [
 		// '{{cmd}}' => '{{description}}',
 	];
@@ -91,10 +92,26 @@ abstract class AbstractHelpMenuController extends AbstractController  {
 			$this->displayCommand($cmdLength, $command, $subcommands);
 		}
 
-        if (array_key_exists('help', $this->commandMap) === false) {
+        if (array_key_exists('help', $this->commandMap)) {
+			$this->displayCommand($cmdLength, 'help', $this->commandMap['help']);
             return;
         }
-		$this->displayCommand($cmdLength, 'help', $this->commandMap['help']);
+		$helpClasses = self::getDirHelpControllers();
+
+		if (empty($helpClasses)) {
+			return;
+		}
+
+		$printer = $this->printer;
+		$printer->out($printer->filterOutput('help', 'info'));
+		$printer->newline();
+		
+		foreach ($helpClasses as $cmd => $class) {
+			$cmdCall = $printer->spaces(2) . $cmd;
+			$line = sprintf('%s%s', $printer->out(Strings::pad($cmdCall, $cmdLength), 'info'), $class::DESCRIPTION);
+			$printer->out($line, false);
+			$printer->newline();
+		}
 	}
 
 	/**
@@ -213,5 +230,25 @@ abstract class AbstractHelpMenuController extends AbstractController  {
 			return '';
 		}
 		return static::COMMAND_DEFINITIONS[$cmd];
+	}
+
+	public function getDirHelpControllers() : array
+	{
+		$classes = [];
+
+		$reflector = new \ReflectionClass(get_class($this));
+
+		foreach (glob(dirname($reflector->getFileName()) . '/*Controller.php') as $controller_file) {
+			$className = str_replace('.php', '', basename($controller_file));
+			$cmd = strtolower(str_replace('Controller', '', $className));
+
+			if ($cmd == 'default') {
+				continue;
+			}
+
+			$class = $reflector->getNamespaceName() . '\\' . $className;
+			$classes[$cmd] = $class;
+		}
+		return $classes;
 	}
 }
