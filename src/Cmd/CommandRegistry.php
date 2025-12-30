@@ -11,6 +11,45 @@ class CommandRegistry extends MinicliCommandRegistry {
 	protected $cmd_namespace;
 
 	/**
+     * @return void
+     */
+    public function autoloadNamespaces()
+    {
+        foreach (glob($this->getCommandsPath() . '/*', GLOB_ONLYDIR) as $namespace_path) {
+            $this->registerNamespace(basename($namespace_path));
+
+            foreach (glob($namespace_path . '/*', GLOB_ONLYDIR) as $subnamespace_path) {
+                $this->registerNamespace(basename($namespace_path) . ' ' . basename($subnamespace_path));
+            }
+        }
+    }
+
+	/**
+     * @param string $command
+     * @param string $subcommand
+     * @return AbstractController | null
+     */
+    public function getCallableControllerFromInput(CommandCall $input)
+    {
+        $namespace = $this->getNamespace($input->command);
+
+		if ($namespace === null) {
+			return null;
+		}
+		$controller = $namespace->getController($input->subcommand);
+		
+
+		if ($controller !== null) {
+			return $controller;
+		}
+
+		$namespace = $this->getNamespace("$input->command $input->subcommand");
+
+		$cmd  = isset($input->args[3]) ? $input->args[3] : 'default';
+		return $namespace->getController($cmd);
+    }
+
+	/**
 	 * Set Extra Namespace
 	 * NOTE: used for script drivers and adding 1 extra layer of namespaceing
 	 * @param  string $ns

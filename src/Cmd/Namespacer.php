@@ -11,10 +11,14 @@ use ReflectionException;
 class Namespacer {
 	protected $cmd_namespace = '';
 	protected $name;
+	protected $nameForFilepath;
+	protected $nameForNamespace;
 	protected $controllers = [];
 
 	public function __construct($name) {
 		$this->name = $name;
+		$this->nameForFilepath = str_replace(' ', '/', $this->name);
+		$this->nameForNamespace = str_replace(' ', '\\', $this->name);
 	}
 
 	/**
@@ -44,7 +48,7 @@ class Namespacer {
 	 */
 	public function loadControllers($commands_path) : array
 	{
-		foreach (glob($commands_path . '/' . $this->getName() . '/*Controller.php') as $controller_file) {
+		foreach (glob($commands_path . '/' . $this->nameForFilepath . '/*Controller.php') as $controller_file) {
 			$this->loadCommandMap($controller_file);
 		}
 
@@ -88,7 +92,7 @@ class Namespacer {
 			$namespace .= "\\$this->cmd_namespace";
 		}
 		
-		$full_class_name = sprintf($namespace . '\\%s\\%s', $this->getName(), $controller_class);
+		$full_class_name = sprintf($namespace . '\\%s\\%s', $this->nameForNamespace, $controller_class);
 
 		try {
 			$reflector = new ReflectionClass($full_class_name);
