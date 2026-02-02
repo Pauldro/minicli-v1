@@ -35,6 +35,16 @@ class Logger implements ServiceInterface {
 	}
 
 	/**
+	 * Return if file exists
+	 * @param  string $filename
+	 * @return bool
+	 */
+	public function exists($filename) : bool
+	{
+		return file_exists($this->filepath($filename));
+	}
+
+	/**
 	 * Record Log Message
 	 * @param  string $filename
 	 * @param  string $text
@@ -65,6 +75,32 @@ class Logger implements ServiceInterface {
 			return true;
 		}
 		return boolval(file_put_contents($file, ''));
+	}
+
+	/**
+	 * Archive Log file for previous month
+	 * @param  string $filename
+	 * @return bool
+	 */
+	public function archiveLogPrevMonth($filename) : bool 
+	{
+		$date = date('Ym', strtotime("-1 month"));
+
+		$file = $this->filepath($filename);
+
+		$archiveFilepath = $this->filepath("$filename-$date");
+
+		if (file_exists($file) === false) {
+			file_put_contents($archiveFilepath, '');
+            return false;
+		}
+		copy($file, $archiveFilepath);
+		if (file_exists($archiveFilepath) === false) {
+			echo $archiveFilepath , "does not exist " . PHP_EOL;
+			return false;
+		}
+		file_put_contents($file, '');
+		return true;
 	}
 
 /* =============================================================
