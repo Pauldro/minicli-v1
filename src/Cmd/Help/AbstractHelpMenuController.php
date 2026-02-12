@@ -86,6 +86,10 @@ abstract class AbstractHelpMenuController extends AbstractController  {
 				continue;
 			}
 
+			if (strpos($command, 'help') !== false) {
+				continue;
+			}
+
 			if (is_array($subcommands) === false) {
 				$subcommands = [];
 			}
@@ -93,7 +97,7 @@ abstract class AbstractHelpMenuController extends AbstractController  {
 		}
 
         if (array_key_exists('help', $this->commandMap)) {
-			$this->displayCommand($cmdLength, 'help', $this->commandMap['help']);
+			$this->displayHelpCommand($cmdLength);
             return;
         }
 		$helpClasses = self::getDirHelpControllers();
@@ -133,6 +137,47 @@ abstract class AbstractHelpMenuController extends AbstractController  {
 			$this->displayCommandDefinition($cmdLength, $command, $subcommand);
 		}
 		$printer->newline();
+		return;
+	}
+
+	/**
+	 * Display Help Command Defintion along with subcommands
+	 * @param  int    $cmdLength
+	 * @return void
+	 */
+	protected function displayHelpCommand($cmdLength) : void
+	{
+		$printer    = $this->printer;
+		$command = 'help';
+		$subcommands = $this->commandMap['help'];
+
+		$this->displayCommandDefinition($cmdLength, $command);
+		
+
+		foreach ($subcommands as $subcommand) {
+			if ($subcommand == 'default') {
+				continue;
+			}
+			$this->displayCommandDefinition($cmdLength, $command, $subcommand);
+			$printer->newline();
+			$handler = $this->app->command_registry->getCallableController($command, $subcommand);
+
+			if (empty($handler::SUBCOMMANDS)) {
+				continue;
+			}
+
+			foreach ($handler::SUBCOMMANDS as $subcmd) {
+				$helpHandler = $this->app->command_registry->getCallableController("$command $subcommand", $subcmd);
+				
+				if (empty($helpHandler)) {
+					continue;
+				}
+				$cmd = $printer->spaces(4) . $subcmd;
+				$line = sprintf('%s%s', $printer->out(Strings::pad($cmd, $cmdLength), 'info'), $helpHandler::DESCRIPTION);
+				$printer->out($line, false);
+				$printer->newline();
+			}
+		}
 		return;
 	}
 
