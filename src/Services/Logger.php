@@ -63,6 +63,24 @@ class Logger implements ServiceInterface {
 	}
 
 	/**
+	 * Record Log Message
+	 * @param  string $filename
+	 * @param  string $text
+	 * @return bool
+	 */
+	public function logWithoutTimestamp($filename, $text) : bool
+	{
+		$file = $this->filepath($filename);
+		$content = '';
+
+		if (file_exists($file)) {
+			$content = file_get_contents($file);
+		}
+		$line = self::createLogString([$text]). PHP_EOL;
+		return boolval(file_put_contents($file, $content . $line));
+	}
+
+	/**
 	 * Clear Log File
 	 * @param  string $filename
 	 * @return bool
@@ -101,6 +119,15 @@ class Logger implements ServiceInterface {
 		}
 		file_put_contents($file, '');
 		return true;
+	}
+
+	public function getLastLine($filename) {
+		$file = $this->filepath($filename);
+
+		if (file_exists($file) === false) {
+			return false;
+		}
+		return trim(shell_exec("tail -n 1 $file"));
 	}
 
 /* =============================================================
