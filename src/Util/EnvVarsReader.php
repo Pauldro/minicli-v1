@@ -26,6 +26,12 @@ class EnvVarsReader {
         return $value == 'true';
     }
 
+    /** @return int */
+    public static function getInt(string $key) : int
+    {
+        return intval(self::get($key));
+    }
+
     /** @return array */
     public static function getArray(string $key, $delimiter = ',') : array
     {
