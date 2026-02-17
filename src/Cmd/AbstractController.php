@@ -25,6 +25,7 @@ abstract class AbstractController extends CommandController {
 	const OPTIONS_DEFINITIONS_OVERRIDE = [];
 	const REQUIRED_PARAMS = [];
 	const SENSITIVE_PARAM_VALUES = [];
+	const REQUIRED_ENV_VARS = [];
 
 	/**
      * Called before `run`.
@@ -63,6 +64,9 @@ abstract class AbstractController extends CommandController {
 	{
 		$this->initEnvTimeZone();
 		
+		if ($this->initRequiredEnvVars() === false) {
+			return false;
+		}
 		if ($this->initRequiredParams() === false) {
 			return false;
 		}
@@ -81,10 +85,17 @@ abstract class AbstractController extends CommandController {
 		return date_default_timezone_set($abbr);
 	}
 
-	/**
-	 * Initialize App
-	 * @return bool
-	 */
+	protected function initRequiredEnvVars() : bool 
+	{
+		foreach (static::REQUIRED_ENV_VARS as $var) {
+			if (EnvVars::exists($var) === false) {
+				$description = static::REQUIRED_ENV_VARS[$var];
+				return $this->error("Missing .env variable: $var - $description");
+			}
+		}
+		return true;
+	}
+
 	protected function initRequiredParams() : bool
 	{
 		foreach (static::REQUIRED_PARAMS as $param) {
