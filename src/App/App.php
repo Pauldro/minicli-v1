@@ -112,6 +112,9 @@ class App extends MinicliApp {
 			if (strtolower($input->subcommand) != 'default') {
 				$cmd .= " $input->subcommand";
 			}
+			if (array_key_exists(3, $input->args)) {
+				$cmd .= ' ' . $input->args[3];
+			}
 			Printer::instance()->error("Controller not found for $cmd");
 			exit;
 		}
