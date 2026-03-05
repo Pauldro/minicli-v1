@@ -2,7 +2,6 @@
 // Minicli Library
 use Exception;
 use Minicli\App as MinicliApp;
-use Minicli\Config as MinicliConfig;
 // Pauldro Minicli
 use Pauldro\Minicli\Cmd;
 use Pauldro\Minicli\Output\Printer;
@@ -10,7 +9,7 @@ use Pauldro\Minicli\Services\Env;
 use Pauldro\Minicli\Services\Logger;
 
 /**
- * @property MinicliConfig       $config
+ * @property Config              $config
  * @property Cmd\CommandRegistry $command_registry
  * @property Env                 $dotenv
  * @property Logger              $log
@@ -18,8 +17,9 @@ use Pauldro\Minicli\Services\Logger;
  */
 class App extends MinicliApp {
 
-	 public function __construct(array $config = null) {
+	 public function __construct(array $config = []) {
 		parent::__construct($this->parseConfig($config));
+		$this->addService('config', new Config($this->parseConfig($config)));
 
 		$this->addServices();
 		$this->parseSetInis();
@@ -84,7 +84,7 @@ class App extends MinicliApp {
 /* =============================================================
     Public
 ============================================================= */
-	public function parseConfig(array $config = null) : array
+	public function parseConfig(array $config = []) : array
 	{
 		return array_merge([
 			'app_path' => __DIR__ . '/../app/Cmd',
