@@ -1,6 +1,8 @@
 <?php namespace Pauldro\Minicli\Cmd;
 // Minicli
 use Minicli\Command\CommandRegistry as MinicliCommandRegistry;
+// Pauldro
+use Pauldro\Minicli\Util\StringUtilities;
 
 /**
  * Ties Commands to Namespaces by name
@@ -31,21 +33,30 @@ class CommandRegistry extends MinicliCommandRegistry {
      */
     public function getCallableControllerFromInput(CommandCall $input)
     {
-        $namespace = $this->getNamespace($input->command);
+		$command = strtolower(StringUtilities::camelCase($input->command));;
+		$subcommand = strtolower(StringUtilities::camelCase($input->subcommand));
+
+		// Check if command namespace exists
+        $namespace = $this->getNamespace($command);
 
 		if ($namespace === null) {
 			return null;
 		}
-		$controller = $namespace->getController($input->subcommand);
-		
+
+		$controller = $namespace->getController($subcommand);
 
 		if ($controller !== null) {
 			return $controller;
 		}
 
-		$namespace = $this->getNamespace("$input->command $input->subcommand");
+		// check if subcommand namespace exists
+		$namespace = $this->getNamespace("$command $subcommand");
 
+		if ($namespace === null) {
+			return null;
+		}
 		$cmd  = isset($input->args[3]) ? $input->args[3] : 'default';
+		$cmd  = strtolower(StringUtilities::camelCase($cmd));
 		return $namespace->getController($cmd);
     }
 
