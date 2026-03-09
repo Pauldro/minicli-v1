@@ -7,6 +7,8 @@ use Pauldro\Minicli\Util\StringUtilities;
 /**
  * Ties Commands to Namespaces by name
  * 
+ * @method AbstactController|null getCallableController($command, $subcommand = "default")
+ * 
  * @property string $cmd_namespace Extra Namespace for App (use for separate script drivers)
  */
 class CommandRegistry extends MinicliCommandRegistry {
@@ -33,7 +35,7 @@ class CommandRegistry extends MinicliCommandRegistry {
      */
     public function getCallableControllerFromInput(CommandCall $input)
     {
-		$command = strtolower(StringUtilities::camelCase($input->command));;
+		$command = strtolower(StringUtilities::camelCase($input->command));
 		$subcommand = strtolower(StringUtilities::camelCase($input->subcommand));
 
 		// Check if command namespace exists
