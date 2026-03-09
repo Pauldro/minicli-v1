@@ -16,6 +16,8 @@ abstract class AbstractHelpMenuController extends AbstractController  {
 
 	protected $commandMap = [];
 
+	protected $commandCallMap = [];
+
 /* =============================================================
 	Init Functions
 ============================================================= */
@@ -25,7 +27,10 @@ abstract class AbstractHelpMenuController extends AbstractController  {
 	 */
 	protected function init() : bool
     {
-		return $this->initCommandMap();
+		if ($this->initCommandMap() === false) {
+			return false;
+		}
+		return $this->initCommandCallMap();
 	}
 
 	/**
@@ -44,6 +49,38 @@ abstract class AbstractHelpMenuController extends AbstractController  {
 			$this->input->command => $this->commandMap[$this->input->command],
 		];
 		$this->commandMap = $cmdmap;
+		return true;
+	}
+
+	protected function initCommandCallMap() : bool
+	{
+		$commands = $this->app->command_registry->getCommandMap();;
+
+		$callMap = [];
+
+		foreach ($commands as $cmd => $subcmds) {
+			$calls = ['default' => $cmd];
+
+			/** @var AbstractController */
+			$handler = $this->app->command_registry->getCallableController($cmd);
+
+			if ($handler) {
+				$calls['default'] = $handler->getCmdCallName();
+			}
+
+			foreach ($subcmds as $subcmd) {
+				$calls[$subcmd] = $subcmd;
+
+				/** @var AbstractController */
+				$handler = $this->app->command_registry->getCallableController($cmd, $subcmd);
+
+				if ($handler) {
+					$calls[$subcmd] = $handler->getCmdCallName();
+				}
+			}
+			$callMap[$cmd] = $calls;
+		}
+		$this->commandCallMap = $callMap;
 		return true;
 	}
 
@@ -191,6 +228,7 @@ abstract class AbstractHelpMenuController extends AbstractController  {
 	protected function displayCommandDefinition($cmdLength, $command, $subcommand = 'default') : void
     {
 		$printer = $this->printer;
+		/** @var AbstractController */
 		$handler = $this->app->command_registry->getCallableController($command, $subcommand);
 
 		$printer->newline();
@@ -200,16 +238,20 @@ abstract class AbstractHelpMenuController extends AbstractController  {
 				$printer->error("Controller for $command $subcommand not found");
 				return;
 			}
-			$printer->out($printer->filterOutput($command, 'info'));
+			
+			$printer->out($printer->filterOutput($this->commandCallMap[$command][$subcommand], 'info'));
             return;
         }
 
 		if ($subcommand == 'default') {
-			$line = sprintf('%s%s', $printer->out(Strings::pad($command, $cmdLength), 'info'), $handler::DESCRIPTION);
+			$line = sprintf('%s%s', $printer->filterOutput(Strings::pad($this->commandCallMap[$command]['default'], $cmdLength), 'info'), $handler::DESCRIPTION);
+			// if (strpos($command, ' ') !== false) { 
+			// 	$line = sprintf('%s%s', $printer->filterOutput(Strings::pad($command, $cmdLength), 'info'), $handler::DESCRIPTION);
+			// }
 			$printer->out($line, false);
 			return;
 		}
-		$cmd = $printer->spaces(2) . $subcommand;
+		$cmd = $printer->spaces(2) . $handler->getCmdCallName();
 		$line = sprintf('%s%s', $printer->out(Strings::pad($cmd, $cmdLength), 'info'), $handler::DESCRIPTION);
 		$printer->out($line, false);
 		return;
@@ -249,8 +291,8 @@ abstract class AbstractHelpMenuController extends AbstractController  {
     {
 		$list = [];
 
-		foreach ($this->commandMap as $command => $subcommands) {
-			$list[] = $command;
+		foreach ($this->commandCallMap as $command => $subcommands) {
+			$list[] = $subcommands['default'];
 
 			if (is_array($subcommands) === false) {
 				continue;
