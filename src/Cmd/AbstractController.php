@@ -237,4 +237,30 @@ abstract class AbstractController extends CommandController {
             $printer->line(implode('', $lineData));
 		}
 	}
+/* =============================================================
+	Displays
+============================================================= */
+	public function getCmdCallName() : string
+	{
+		$reflector = CommandReflectionClassFactory::fetch($this);
+		$controllerName = $reflector->getControllerName();
+
+		if (strtolower($controllerName) != 'default') {
+			return Strings::hyphenCase($controllerName);
+		}
+
+		if ($reflector->hasOtherControllersInCmdDir() === false) {
+			if (strtolower($reflector->getShortNamespaceName(1)) == 'help') {
+				return 'help';
+			}
+
+			$ns = [];
+			foreach (explode('\\', $reflector->getShortNamespaceName(2)) as $segment) {
+				$ns[] = Strings::hyphenCase($segment);
+			}
+			return implode(" ", $ns);
+		}
+
+		return Strings::hyphenCase($reflector->getShortNamespaceName(1));
+	}
 }
