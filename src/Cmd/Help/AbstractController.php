@@ -243,6 +243,9 @@ abstract class AbstractController extends ParentController {
 
 	protected function getSubcommandController(string $command, string $subcommand) 
 	{
+		$command = strtolower(Strings::camelCase($command));
+		$subcommand = strtolower(Strings::camelCase($subcommand));
+		
 		$reflector = new ReflectionClass(get_class($this));
 		$ns = $reflector->getNamespaceName() . '\\' . ucfirst($command) . '\\';
 		$class = $ns . ucfirst($subcommand) . 'Controller';
