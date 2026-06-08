@@ -8,6 +8,7 @@ use Pauldro\Minicli\Output\Printer;
 use Pauldro\Minicli\Services\Logger;
 use Pauldro\Minicli\Util\EnvVarsReader as EnvVars;
 use Pauldro\Minicli\Util\StringUtilities as Strings;
+use Pauldro\Minicli\Util\Timer;
 
 /**
  * Class for Handling Executing Commands
@@ -16,6 +17,7 @@ use Pauldro\Minicli\Util\StringUtilities as Strings;
  * @property CommandCall $input
  * @property Logger      $log
  * @property Printer     $printer
+ * @property Timer       $timer
  */
 abstract class AbstractController extends CommandController {
 	const DESCRIPTION = '';
@@ -26,6 +28,14 @@ abstract class AbstractController extends CommandController {
 	const REQUIRED_PARAMS = [];
 	const SENSITIVE_PARAM_VALUES = [];
 	const REQUIRED_ENV_VARS = [];
+
+	protected $timer;
+
+    public function __construct()
+    {
+        $this->timer = new Timer();
+    }
+
 
 	/**
      * Called before `run`.
