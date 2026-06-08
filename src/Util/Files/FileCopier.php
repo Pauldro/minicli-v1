@@ -2,14 +2,16 @@
 
 
 /**
- * FileCopier
  * Service for Copying files
+ * 
+ * @property string $errorMsg
+ * @property string $lastCopiedFile
  */
 class FileCopier {
 	protected static $instance;
 
-	public string $errorMsg;
-    public string $lastCopiedFile;
+	public $errorMsg;
+    public $lastCopiedFile;
 
 
 	public static function instance() : FileCopier
@@ -28,7 +30,7 @@ class FileCopier {
      */
 	public function copy(string $fromFile, string $toFile) : bool
     {
-        $this->erromsg = '';
+        $this->errorMsg = '';
         $this->lastCopiedFile = '';
 
 		if (file_exists($fromFile) === false) {
