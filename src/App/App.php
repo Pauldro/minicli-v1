@@ -127,4 +127,13 @@ class App extends MinicliApp {
 		}
 		$this->runSingle($input);
 	}
+
+	public function error(string $msg, bool $addToLog = false) : void
+	{
+		$this->printer->error($msg);
+
+		if ($this->addToLog) {
+			$this->log->log('error', $msg);
+		}
+	}
 }
