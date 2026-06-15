@@ -97,9 +97,8 @@ abstract class AbstractController extends CommandController {
 
 	protected function initRequiredEnvVars() : bool 
 	{
-		foreach (static::REQUIRED_ENV_VARS as $var) {
+		foreach (static::REQUIRED_ENV_VARS as $var => $description) {
 			if (EnvVars::exists($var) === false) {
-				$description = static::REQUIRED_ENV_VARS[$var];
 				return $this->error("Missing .env variable: $var - $description");
 			}
 		}
