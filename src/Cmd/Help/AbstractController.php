@@ -101,10 +101,10 @@ abstract class AbstractController extends ParentController {
 
 		$printer = $this->printer;
 		$optLength = Strings::longestStrlen(array_keys(static::REQUIRED_ENV_VARS));
-		$printer->info('Required .env variable:');
+		$printer->info('Required .env variables:');
 
 		foreach (static::REQUIRED_ENV_VARS as $var => $description) {
-			$example = Strings::pad($var, $optLength);
+			$example = Strings::pad($var, $optLength + 4);
 			$printer->line(sprintf('%s%s%s', $printer->spaces(2), $example, $description));
 		}
 		return;
@@ -254,5 +254,13 @@ abstract class AbstractController extends ParentController {
 			return $this->error("Controller not found: $class");
 		}
 		return new $class();
+	}
+
+	public function getCommandDefinition($cmd) : string
+	{
+		if (array_key_exists($cmd, static::COMMAND_DEFINITIONS) === false) {
+			return '';
+		}
+		return static::COMMAND_DEFINITIONS[$cmd];
 	}
 }
